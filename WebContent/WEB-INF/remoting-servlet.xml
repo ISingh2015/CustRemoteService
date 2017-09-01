@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans      
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd      
+   http://www.springframework.org/schema/context       
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!--<bean id="elegantUserWebService" class="com.cust.domain.webservice.impl.UserWebServiceImpl"/>-->
+    <bean name="/UserService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="elegantUserWebService" />
+        <property name="serviceInterface" value="com.cust.domain.webservice.UserWebService"/>
+    </bean>
+    
+    <bean name="/CountryService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="elegantCountryWebService" />
+        <property name="serviceInterface" value="com.cust.domain.webservice.CountryWebService"/>
+    </bean>
+
+    <bean name="/SalesManService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="elegantSalesManWebService" />
+        <property name="serviceInterface" value="com.cust.domain.webservice.SalesManWebService"/>
+    </bean>
+
+    <bean name="/CustomerService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="elegantCustomerWebService" />
+        <property name="serviceInterface" value="com.cust.domain.webservice.CustomerWebService"/>
+    </bean>
+
+    <bean name="/SupplierService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="elegantSupplierWebService" />
+        <property name="serviceInterface" value="com.cust.domain.webservice.SupplierWebService"/>
+    </bean>
+
+    <bean name="/ProductService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="elegantProductWebService" />
+        <property name="serviceInterface" value="com.cust.domain.webservice.ProductWebService"/>
+    </bean>
+
+    <bean name="/BuySellService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="elegantBuySellWebService" />
+        <property name="serviceInterface" value="com.cust.domain.webservice.BuySellWebService"/>
+    </bean>
+
+    <bean name="/PreferenceService" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="elegantPreferenceWebService" />
+        <property name="serviceInterface" value="com.cust.domain.webservice.PreferenceWebService"/>
+    </bean>
+
+    <context:component-scan base-package="com.cust"/>
+</beans>

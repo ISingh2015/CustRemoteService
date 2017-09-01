@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.cust.domain.vo">
+    <sql-query name="getBuySellById">
+        <return alias="buySell" class="ElegantBuySell" />
+        select * from dbo.BuySell where compId=? and billId=?
+    </sql-query>
+
+    <sql-query name="getAllBuySell">
+        <return alias="buySell" class="ElegantBuySell" />
+        select * from dbo.BuySell where compId = ? and billId is not null
+    </sql-query>
+
+    <sql-query name="getBuySellEmailList">
+        <return alias="buySellEmail" class="ElegantMailList" />
+        select * from dbo.CustEmail where emailId is not null
+    </sql-query>
+
+    <sql-query name="getAllBuySellForReport">
+        <return-scalar column="compId" type="int"/>
+        <return-scalar column="userId" type="int"/>
+        <return-scalar column="billId" type="int"/>
+        <return-scalar column="billType" type="int"/>
+        <return-scalar column="buyersellerCode" type="string"/>        
+        <return-scalar column="buyersellerName" type="string"/>                
+        <return-scalar column="buyersellerBillno" type="string"/>
+        <return-scalar column="buyersellerBilldt" type="date"/>        
+        <return-scalar column="billno" type="string"/>
+        <return-scalar column="billDate" type="date"/>        
+        <return-scalar column="salesmanCode" type="string"/>        
+        <return-scalar column="finalBillamt" type="double"/>        
+<!--        <return-scalar column="srl" type="int"/>        -->
+        <return-scalar column="productId" type="int"/>
+        <return-scalar column="purchQty" type="double"/>
+        <return-scalar column="purchRtnqty" type="double"/>        
+        <return-scalar column="billedQty" type="double"/>
+        <return-scalar column="billedRtnqty" type="double"/>        
+        <return-scalar column="purchRate" type="double"/>        
+        <return-scalar column="billedRate" type="double"/>
+        <return-scalar column="unitPackaging" type="string"/>        
+        <return-scalar column="unitDiscount" type="double"/>                
+        <return-scalar column="unitAmt" type="double"/>
+        {call elegant_buysellconsolodation (?, ?, ?, ?, ?, ?, ?)}
+    </sql-query>
+
+    <sql-query name="getMaxSrlKey">
+        <return-scalar type="long" column="srl" />
+        select isnull(max(srl)+1,1) as srl from dbo.MarketEmails where srl is not null
+    </sql-query>
+
+    <sql-query name="getMaxBillKey">
+        <return-scalar type="long" column="billId" />
+        select isnull(max(billId)+1,1) as billId from dbo.BuySell where compId= ?
+    </sql-query>
+
+    <sql-query name="deleteBuySell">
+            delete from BuySell where compid = ? and BillId in (
+             select BillId from BuySellDetails where compid = ? and ProductId not in (select ProductId from BuySellDetails where compid = ? and BillType >= ?)
+            ) and BillId = ?
+    </sql-query>
+
+    <sql-query name="deleteBuySellItem">
+        delete from dbo.BuySellDetails where compId= ? and billId=?
+    </sql-query>
+
+    <sql-query name="getBuySellDetails">
+        <return alias="buySellDetail" class="ElegantBuySellDetails" />
+        select * from dbo.BuySellDetails where compId = ? and billId = ? and productid in (select prodid from product where compid= ?) order by srl
+    </sql-query>
+
+    <sql-query name="updateStockQuery">
+        update Product set minInStock= (select isnull(SUM(Purchqty-PurchRtnqty) - SUM(Billedqty-BilledRtnqty),0) from BuySellDetails where compId=? and ProductId=?) where compid=? and prodId=?
+    </sql-query>
+
+</hibernate-mapping>

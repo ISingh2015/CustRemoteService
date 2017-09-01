@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.cust.domain.vo">
+	<sql-query name="getCountryById">
+		<return alias="country" class="ElegantCountry" />
+		select * from dbo.Country where countryId = ?
+	</sql-query>
+
+	<sql-query name="getAllCountries">
+		<return alias="country" class="ElegantCountry" />
+		select * from dbo.Country where countryId is not null 
+	</sql-query>
+
+	<sql-query name="getMaxCountryKey">
+		<return-scalar type="long" column="countryId" />
+		select isnull(max(countryId)+1,1) as countryId from dbo.country where
+		countryId is not null
+	</sql-query>
+
+	<sql-query name="CountryCount">
+		<return-scalar type="long" column="countryId" />
+		select isnull(count(countryId),0) as countCountry from dbo.Country
+		where countryId is not null
+	</sql-query>
+
+	<sql-query name="deleteCountry">
+        {call elegant_deletecountry(?)};
+        </sql-query>
+        
+
+</hibernate-mapping>

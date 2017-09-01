@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.cust.domain.vo">
+	<sql-query name="getSupplierById">
+		<return alias="supplier" class="ElegantSupplier" />
+		select * from dbo.Supplier where compId=? and supId=?
+	</sql-query>
+
+	<sql-query name="getAllSuppliers">
+		<return alias="customer" class="ElegantSupplier" />
+		select * from dbo.Supplier where compId = ? and supId is not null
+	</sql-query>
+
+	<sql-query name="getMaxSupKey">
+		<return-scalar type="long" column="supId" />
+		select isnull(max(supId)+1,1) as supId from dbo.Supplier where
+		compId= ? 
+	</sql-query>
+
+	<sql-query name="supCount">
+		<return-scalar type="long" column="countSupplier" />
+		select isnull(count(supId),0) as countSupplier from dbo.Supplier
+		where compId=? and userId is not null
+	</sql-query>
+
+	<sql-query name="deleteSupplier">
+            delete from dbo.Supplier where compId = ? and supId = ? and supId not in 
+            (select buyerSellerCode from BuySell where compId = ? and billType=100)
+            
+	</sql-query>
+
+</hibernate-mapping>

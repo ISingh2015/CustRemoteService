@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.cust.domain.vo">
+    <sql-query name="getProductById">
+        <return alias="product" class="ElegantProduct" />
+        select * from dbo.Product where compId=? and prodId=?
+    </sql-query>
+
+    <sql-query name="getAllProducts">
+        <return alias="product" class="ElegantProduct" />
+        select * from dbo.Product where compId = ? and prodId is not null and opStock+minInStock > 0 
+    </sql-query>
+
+    <sql-query name="getMaxProdKey">
+        <return-scalar type="long" column="prodId" />
+        select isnull(max(prodId)+1,1) as prodId from dbo.Product where
+        compId= ? 
+    </sql-query>
+
+    <sql-query name="prodCount">
+        <return-scalar type="long" column="countProduct" />
+        select isnull(count(prodId),0) as countProduct from dbo.Product
+        where compId=? and userId is not null
+    </sql-query>
+
+    <sql-query name="deleteProduct">
+        delete from product where compId = ? and prodid = ? and prodId not in 
+        (select ProductId  from BuySelldetails)
+    </sql-query>
+
+    <sql-query name="getProductStockById">
+        <return-scalar type="double" column="stockValue" />
+        {call elegant_productStockByDate (?, ?, ?)}
+    </sql-query>
+
+</hibernate-mapping>

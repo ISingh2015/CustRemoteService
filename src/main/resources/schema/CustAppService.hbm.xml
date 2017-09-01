@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.cust.domain.vo">
+    <sql-query name="getCustomerById">
+        <return alias="customer" class="ElegantCustomer" />
+        select * from dbo.Customer where compId=? and custId=?
+    </sql-query>
+
+    <sql-query name="getAllCustomers">
+        <return alias="customer" class="ElegantCustomer" />
+        select * from dbo.Customer where compId = ? and custId is not null 
+    </sql-query>
+
+    <sql-query name="getMaxCustKey">
+        <return-scalar type="long" column="custId" />
+        select isnull(max(custId)+1,1) as custId from dbo.customer where compId= ?
+    </sql-query>
+
+    <sql-query name="custCount">
+        <return-scalar type="long" column="countCustomer" />
+        select isnull(count(custId),0) as countCustomer from dbo.Customer
+        where compId=? and userId is not null
+    </sql-query>
+
+    <sql-query name="deleteCustomer">
+        delete from dbo.Customer where compId = ? and custId = ? and custId not in 
+        (select buyerSellerCode from BuySell where compId = ? and billType = 200
+    </sql-query>
+
+</hibernate-mapping>

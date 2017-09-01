@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:drools="http://drools.org/schema/drools-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans classpath:org/springframework/beans/factory/xml/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop classpath:org/springframework/aop/config/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx classpath:org/springframework/transaction/config/spring-tx-4.0.xsd">
+
+    <!-- p:location="/com/xdash/properties/jdbc.properties" -->
+    <!-- <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" 
+    p:location="classpath:jdbc.properties" /> -->
+<!--    <bean
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:jdbc.properties" />
+    </bean>-->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:elegant.properties</value>                
+            </list>
+
+        </property>
+    </bean>
+
+    <bean class="com.cust.common.session.CustomAbstractRoutingDataSource" id="dataSource"  >
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry value-ref="custServicedataSource" key="custService"/>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="custServicedataSource"/>
+    </bean>    
+
+    <bean id="custServicedataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="${db.driverClassName}" />            
+        <property name="url"
+                  value="jdbc:sqlserver://${db.serverName}:1433;databaseName=${db.defaultDBName}" />
+        <property name="username" value="${db.userName}" />
+        <property name="password" value="${db.password}" />
+    </bean>
+    
+<!--   <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate"
+          autowire="byName"   >
+        <property name="dataSource" ref="dataSource" />
+    </bean>-->
+
+    <!--
+        <bean id="propertyConfigurer"
+              class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+            <property name="locations">
+                <list>
+                    <value>classpath:jdbc.properties</value>
+                </list>
+            </property>
+        </bean>
+
+  <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    destroy-method="close" p:driverClassName="${jdbc.driverClassName}"
+    p:url="${jdbc.databaseurl}" p:username="${jdbc.username}" p:password="${jdbc.password}" />--> 
+    
+    <!-- Session Factory -->
+    <!-- class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"> -->
+    <bean id="sessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>    
+                <prop key="hibernate.cache.use_query_cache">false</prop> 
+                <prop key="hibernate.cache.use_second_level_cache">true</prop> 
+                <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
+                <prop key="hibernate.connection.release_mode">after_transaction</prop> 
+                <!--<prop key="hibernate.generate_statistics">true</prop>-->
+            </props>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>schema/UserAppService.hbm.xml</value>
+                <value>schema/CountryAppService.hbm.xml</value>
+                <value>schema/CustAppService.hbm.xml</value>
+                <value>schema/SupAppService.hbm.xml</value>                                
+                <value>schema/ProdAppService.hbm.xml</value>                                                
+                <value>schema/SalesManAppService.hbm.xml</value>                                
+                <value>schema/BuySellAppService.hbm.xml</value>                                                
+            </list>
+        </property>
+        <property name="annotatedClasses">
+            <list>
+                <value>com.cust.domain.vo.ElegantUser</value>
+                <value>com.cust.domain.vo.ElegantMailList</value>                
+                <value>com.cust.domain.vo.ElegantMarketMail</value>                                                                
+                <value>com.cust.domain.vo.ElegantUserActivation</value>                                
+                <value>com.cust.domain.vo.ElegantUserAccess</value>                
+                <value>com.cust.domain.vo.ElegantUserLogin</value>
+                <value>com.cust.domain.vo.ElegantCountry</value>
+                <value>com.cust.domain.vo.ElegantCustomer</value>
+                <value>com.cust.domain.vo.ElegantSupplier</value>                
+                <value>com.cust.domain.vo.ElegantProduct</value>                                
+                <value>com.cust.domain.vo.ElegantSalesMan</value>                                
+                <value>com.cust.domain.vo.ElegantBuySell</value>                                
+                <value>com.cust.domain.vo.ElegantBuySellDetails</value>                                                                
+                <value>com.cust.domain.vo.ElegantUpdates</value>          
+                <value>com.cust.domain.vo.ElegantHitCounter</value>                                                      
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+    <bean id="txManager"
+          class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+          autowire="byName" />
+
+    <tx:advice id="txDefaultAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="release*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="com.cust.common.ApplicationException" />
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="com.cust.common.ApplicationException" />            
+            <tx:method name="execute*" propagation="REQUIRED" rollback-for="com.cust.common.ApplicationException" />
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="com.cust.common.ApplicationException" />
+            <tx:method name="*" propagation="REQUIRED" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:advisor advice-ref="txDefaultAdvice" pointcut="execution(* com.cust.domain.dao..*(..))" />
+        <aop:advisor advice-ref="txDefaultAdvice" pointcut="execution(* com.cust.domain.service..*(..))" />        
+    </aop:config>
+
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"> 
+        <property name="configLocation" value="classpath:ehcache.xml" /> 
+    </bean>
+    
+    <bean id="sessionManager" class="com.cust.common.session.SessionManager" autowire="byName"/>
+    <!--<bean id="propertyContainer" class="com.cust.common.DBPropertyContainer" autowire="byName"/>-->    
+    <bean class="com.cust.common.session.DBPropertyContainer" id="propertyContainer" autowire="byName">
+        <property value="${db.driverClassName}" name="dbDriverClassName"/>                
+        <property value="${db.userName}" name="dbUserName"/>
+        <property value="${db.password}" name="dbPassword"/>
+        <property value="${db.serverName}" name="dbServerName"/>
+    </bean>    
+    <bean id="dynamicDataSource" class="com.cust.common.session.DynamicDataSource" autowire="byName"/>    
+    <!--<bean id="customRoutingDS" class="com.cust.common.session.CustomAbstractRoutingDataSource" autowire="byName"/>-->    
+    <bean id="serviceInterceptor" class="com.cust.common.session.ServiceInterceptor" autowire="byName" />
+
+    <bean id="taskExecutor"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"
+          p:corePoolSize="5" p:maxPoolSize="25" />
+
+    <bean id="elegantPreferenceDao" class="com.cust.domain.dao.impl.PreferenceDaoImpl" >
+    </bean>
+
+    <bean id="elegantPreferenceService" class="org.springframework.aop.framework.ProxyFactoryBean"  autowire="byName">
+        <property name="target">
+            <bean class="com.cust.domain.service.impl.PreferenceServiceImpl" />
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>serviceInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="elegantPreferenceVO" class="com.cust.domain.vo.PreferenceVO" autowire="byName">
+        <property name="preference">
+            <map key-type="java.lang.String">
+                <entry value="${com.elegant.inventory.userservice}" key="com.elegant.inventory.userservice"/>
+                <entry value="${com.elegant.inventory.countryservice}" key="com.elegant.inventory.countryservice"/>
+                <entry value="${com.elegant.inventory.supplierservice}" key="com.elegant.inventory.supplierservice"/>
+                <entry value="${com.elegant.inventory.customerservice}" key="com.elegant.inventory.customerservice"/>
+                <entry value="${com.elegant.inventory.salesmanservice}" key="com.elegant.inventory.salesmanservice"/>                
+                <entry value="${com.elegant.inventory.productservice}" key="com.elegant.inventory.productservice"/>                
+                <entry value="${com.elegant.inventory.buysellservice}" key="com.elegant.inventory.buysellservice"/>                
+            </map>
+        </property>
+        <property name="constants">
+            <map key-type="java.lang.String">
+                <entry value="${elegant.buy}" key="elegant.buy"/>
+                <entry value="${elegant.sell}" key="elegant.sell"/>
+                <entry value="${elegant.buyrtn}" key="elegant.buyrtn"/>
+                <entry value="${elegant.sellrtn}" key="elegant.sellrtn"/>                                                
+            </map>
+        </property>
+
+    </bean>
+    
+    <bean id="elegantClentsAndUpdates" class="com.cust.domain.vo.ElegantClientsAndUpdates" >
+    </bean>
+        
+    <bean id="elegantUserDao" class="com.cust.domain.dao.impl.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="elegantUserService" class="org.springframework.aop.framework.ProxyFactoryBean"  autowire="byName">
+        <property name="target">
+            <bean class="com.cust.domain.service.impl.UserServiceImpl" />
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>serviceInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="elegantCountryDao" class="com.cust.domain.dao.impl.CountryDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="elegantCountryService" class="org.springframework.aop.framework.ProxyFactoryBean"  autowire="byName">
+        <property name="target">
+            <bean class="com.cust.domain.service.impl.CountryServiceImpl" />
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>serviceInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="elegantSalesManDao" class="com.cust.domain.dao.impl.SalesManDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="elegantSalesManService" class="org.springframework.aop.framework.ProxyFactoryBean"  autowire="byName">
+        <property name="target">
+            <bean class="com.cust.domain.service.impl.SalesManServiceImpl" />
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>serviceInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="elegantCustomerDao" class="com.cust.domain.dao.impl.CustomerDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="elegantCustomerService" class="org.springframework.aop.framework.ProxyFactoryBean"  autowire="byName">
+        <property name="target">
+            <bean class="com.cust.domain.service.impl.CustomerServiceImpl" />
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>serviceInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="elegantSupplierDao" class="com.cust.domain.dao.impl.SupplierDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="elegantSupplierService" class="org.springframework.aop.framework.ProxyFactoryBean"  autowire="byName">
+        <property name="target">
+            <bean class="com.cust.domain.service.impl.SupplierServiceImpl" />
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>serviceInterceptor</value>
+            </list>
+        </property>
+    </bean>
+    
+    <bean id="elegantProductDao" class="com.cust.domain.dao.impl.ProductDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="elegantProductService" class="org.springframework.aop.framework.ProxyFactoryBean"  autowire="byName">
+        <property name="target">
+            <bean class="com.cust.domain.service.impl.ProductServiceImpl" />
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>serviceInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="elegantBuySellDao" class="com.cust.domain.dao.impl.BuySellDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean id="elegantBuySellService" class="org.springframework.aop.framework.ProxyFactoryBean"  autowire="byName">
+        <property name="target">
+            <bean class="com.cust.domain.service.impl.BuySellServiceImpl" />
+        </property>
+        <property name="interceptorNames">
+            <list>
+                <value>serviceInterceptor</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="elegantUserWebService" class="com.cust.domain.webservice.impl.UserWebServiceImpl"/>
+    <bean id="elegantCountryWebService" class="com.cust.domain.webservice.impl.CountryWebServiceImpl"/>
+    <bean id="elegantCustomerWebService" class="com.cust.domain.webservice.impl.CustomerWebServiceImpl"/>
+    <bean id="elegantSupplierWebService" class="com.cust.domain.webservice.impl.SupplierWebServiceImpl"/>
+    <bean id="elegantProductWebService" class="com.cust.domain.webservice.impl.ProductWebServiceImpl"/>
+    <bean id="elegantSalesManWebService" class="com.cust.domain.webservice.impl.SalesManWebServiceImpl"/>
+    <bean id="elegantBuySellWebService" class="com.cust.domain.webservice.impl.BuySellWebServiceImpl"/>        
+    <bean id="elegantPreferenceWebService" class="com.cust.domain.webservice.impl.PreferenceWebServiceImpl"/>
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" autowire="byName" >
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="eleganinfo@gmail.com" />
+        <property name="password" value="foxpro123" />
+
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="custMailer" class="com.cust.util.CustMailManager">
+        <property name="mailSender" ref="mailSender" />
+    </bean>
+    
+    <bean id="userSessionManager" class="com.cust.common.session.UserSessionManager" autowire="byName" scope="singleton"/>
+    
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"> 
+        <property name="mediaTypes"> 
+            <map> 
+                <entry key="html" value="text/html"></entry> 
+                <entry key="json" value="application/json"></entry> 
+                <entry key="xml" value="application/xml"></entry> 
+            </map> 
+        </property> 
+    </bean>
+<!--    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
+        <property name="interceptors" ref="authorizationInterceptor"/>
+    </bean>
+
+    <bean id="authorizationInterceptor"
+          class="org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor">
+        <property name="authorizedRoles" value="administrator,operator"/>
+    </bean>-->
+</beans>

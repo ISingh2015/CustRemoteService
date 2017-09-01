@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.cust.domain.vo">
+	<sql-query name="getSalesManById">
+		<return alias="salesMan" class="ElegantSalesMan" />
+		select * from dbo.SalesMan where compid = ? and salesManId = ?
+	</sql-query>
+
+	<sql-query name="getAllSalesMan">
+		<return alias="salesMan" class="ElegantSalesMan" />
+		select * from dbo.SalesMan where compid = ? and salesManId is not null 
+	</sql-query>
+
+	<sql-query name="getMaxSalesManKey">
+		<return-scalar type="long" column="salesManId" />
+		select isnull(max(salesManId)+1,1) as salesManId from dbo.salesMan where
+		compid = ? and salesManId is not null
+	</sql-query>
+
+	<sql-query name="SalesManCount">
+		<return-scalar type="long" column="salesManId" />
+		select isnull(count(salesManId),0) as countSalesMan from dbo.SalesMan
+		where compid = ? and salesManId is not null
+	</sql-query>
+
+	<sql-query name="deleteSalesMan">
+                delete from dbo.SalesMan where compId = ? and salesManId= ? and salesManId not in 
+                (select salesManCode from BuySell )        
+            
+	</sql-query>
+
+</hibernate-mapping>

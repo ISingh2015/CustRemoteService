@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="com.cust.domain.vo">
+    <sql-query name="getUserByNameAndPass">
+        <return alias="user" class="ElegantUser" />
+        select * from dbo.Users where userLoginName collate latin1_general_cs_as =? and userLoginPwd collate latin1_general_cs_as =? 
+    </sql-query>
+    <sql-query name="getUserByNameOrEmail">
+        <return alias="user" class="ElegantUser" />
+        select * from dbo.Users where userLoginName=? or email=? 
+    </sql-query>
+
+    <sql-query name="getAllUsers">
+        <return alias="user" class="ElegantUser" />
+        select * from dbo.Users where compid = ? and userId is not null 
+    </sql-query>
+
+    <sql-query name="getByCriteria">
+        <return alias="user" class="ElegantUser" />
+        select * from dbo.Users where userId is not null 
+    </sql-query>
+
+    <sql-query name="getMaxUserKey">
+        <return-scalar type="long" column="userId" />
+        select isnull(max(userId)+1,1000) as userId from dbo.Users where compid = ? and userId is not null
+    </sql-query>
+
+    <sql-query name="getMaxUseAccessrKey">
+        <return-scalar type="long" column="accessId" />
+        select isnull(max(accessId)+1,0) as accessId from dbo.UserAppAccess where compid = ? and userId =? and userId is not null
+    </sql-query>
+
+    <sql-query name="getMaxUserKeyAct">
+        <return-scalar type="long" column="userId" />
+        select isnull(max(userId)+1,1000) as userId from dbo.UserActivation where compid = ? and userId is not null
+    </sql-query>
+
+    <sql-query name="getMaxUserLoginKey">
+        <return-scalar type="long" column="loginId" />
+        select isnull(max(loginId)+1,1000) as loginId from dbo.UserLogins where compid = ? and userId =? and userId is not null
+    </sql-query>
+
+    <sql-query name="userCount">
+        <return-scalar type="long" column="countUsers" />
+        select isnull(count(userId),0) as countUsers from dbo.Users where compid = ? and userId is not null
+    </sql-query>
+
+    <sql-query name="getUserById">
+        <return alias="user" class="ElegantUser" />
+        select * from dbo.Users where compid = ? and userId=?
+    </sql-query>
+
+    <sql-query name="deleteUser">
+        <return alias="user" class="ElegantUser" />
+        <!--        delete from dbo.Users where compid = ? and userId=? -->
+        delete from Users where compid = ? and userid = ? and userId not in 
+        (select userid from Supplier ) and userid  not in 
+        (select userId from customer) and userId not in 
+        (select userId from buysell) and userId not in 
+        (select userid from SalesMan )        
+    </sql-query>
+
+    <sql-query name="deleteUserAccess">
+        <return alias="user" class="ElegantUserAccess" />
+        delete from dbo.UserAppAccess where compid = ? and userId=?
+    </sql-query>
+
+    <sql-query name="getUserAppAccess">
+        <return alias="userAccess" class="ElegantUserAccess" />
+        select * from dbo.UserAppAccess where compid = ? and userId=? and userId is not null 
+    </sql-query>
+
+    <sql-query name="createUserMenuAccess" >
+        exec elegant_userMenuAccess :compId, :userId
+    </sql-query>
+
+    <sql-query name="getHitCount">
+        <return alias="hitCount" class="ElegantHitCounter" />
+        select * from dbo.WebSiteHitCount where hitId=?
+    </sql-query>
+
+</hibernate-mapping>
