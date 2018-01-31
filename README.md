@@ -2,7 +2,8 @@
 Maven Customer Service order Management WEB application, exposes WEB Services over the Internet built using SPRING-HESSIAN exporter.
 Uses hibernateDAO Support for building DAO, SERVICE and HESSIAN exporter for WEB SERVICE layer. Home page displays no menu and is used only starting up the WEB Service 
 
-Maven Dependency needed for functioning of the WEB app.
+One needs to download other Maven Dependency needed for functioning of the WEB app as mentioned below.
+
 1. Cust Service dependency
     Actual Module containing the DAO and Service Layers for running the web service.
 2. Cust App Client 
