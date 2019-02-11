@@ -24,7 +24,7 @@
     <bean id="custServicedataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
             <property name="driverClassName" value="${db.driverClassName}" />            
         <property name="url"
-                    value="jdbc:sqlserver://${db.serverName}:1433;databaseName=${db.defaultDBName}" />
+                    value="jdbc:sqlserver://${db.serverName}:${db.serverPort};databaseName=${db.defaultDBName}" />
             <property name="username" value="${db.userName}" />
             <property name="password" value="${db.password}" />
     </bean>
