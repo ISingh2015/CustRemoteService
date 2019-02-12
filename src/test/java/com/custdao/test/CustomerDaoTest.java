@@ -6,6 +6,8 @@ import com.cust.common.ServiceControl;
 import com.cust.domain.dao.CustomerDao;
 import com.cust.domain.vo.ElegantCustomer;
 import com.cust.domain.vo.ElegantUser;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.Assert;
@@ -15,10 +17,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:testApplicationContext.xml"})
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,DbUnitTestExecutionListener.class})
+@DatabaseSetup({"classpath:CustTestData.xml"})
+
 public class CustomerDaoTest {
 
     Logger logger = LoggerFactory.getLogger(CustomerDaoTest.class);
@@ -33,7 +40,7 @@ public class CustomerDaoTest {
     }
 
     @Test
-    public void testGetUserByUserIdAndCustId() {
+    public void testGetCustomerById() {
         ElegantCustomer elegantCustomer = null;
         try {
             int custId = 001;
@@ -46,13 +53,13 @@ public class CustomerDaoTest {
     }
 
     @Test
-    public void testGetAllCustomersByUserId() {
+    public void testGetAllCustomers() {
         List<ElegantCustomer> elegantCustomerList = null;
         ServiceControl serviceControl = new ServiceControl();
         try {
 
             elegantCustomerList = elegantCustomerDao.getAllCustomers(serviceControl, user.getCompID());
-            logger.info("Customer Found          : " + elegantCustomerList.size());
+            logger.info("Customers Found          : " + elegantCustomerList.size());
         } catch (ApplicationException e) {
             logger.info(e.getMessage());
         }
@@ -61,24 +68,15 @@ public class CustomerDaoTest {
 
     @Test
     public void testSaveCustomers() {
-        ArrayList<ElegantCustomer> elegantCustomerList = new ArrayList<ElegantCustomer>();
-        ElegantCustomer elegantCustomer;
+        ArrayList<ElegantCustomer> elegantCustomerList = null;
         ServiceControl serviceControl = new ServiceControl();
-        Pagination pagination = new Pagination();
-        pagination.setCurrrentPageNumber(1);
-        pagination.setMaxPageSize(10);
-        serviceControl.setPagination(pagination);
-        try {
 
-            elegantCustomer = new ElegantCustomer();
-            elegantCustomer.setCompID(6000);
-            elegantCustomer.setUserID(user.getUserID());
-            elegantCustomer.setCustName("Test");
-            elegantCustomer.setFrozen(0);
-//            elegantCustomerList = elegantCustomerDao.getAllCustomers(serviceControl, userId);
-            elegantCustomerList.add(elegantCustomer);
-            elegantCustomerList = elegantCustomerDao.saveCustomerList(elegantCustomerList);
-            logger.info("Customers Saved          : " + elegantCustomerList.size());
+        try {
+            elegantCustomerList = (ArrayList<ElegantCustomer>)elegantCustomerDao.getAllCustomers(serviceControl,user.getCompID());
+            if (!elegantCustomerList.isEmpty()) {
+                elegantCustomerList = elegantCustomerDao.saveCustomerList(elegantCustomerList);
+            logger.info("Customers Saved          : " + elegantCustomerList.size());                
+            }
         } catch (ApplicationException e) {
             logger.info(e.getMessage());
         }

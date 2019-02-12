@@ -12,6 +12,8 @@ import com.cust.common.UserInfo;
 import com.cust.domain.service.CustomerService;
 import com.cust.domain.vo.ElegantCustomer;
 import com.cust.domain.vo.ElegantUser;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,10 +25,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:testApplicationContext.xml"})
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,DbUnitTestExecutionListener.class})
+@DatabaseSetup({"classpath:CustTestData.xml"})
+
 public class CustomerServiceTest {
 
     Logger logger = LoggerFactory.getLogger(CustomerServiceTest.class);
@@ -128,7 +135,7 @@ public class CustomerServiceTest {
         serviceControl.setDbInfo(dbInfo);
         serviceControl.setSessionInfo(sessionInfo);
         Pagination pagination = new Pagination();
-        pagination.setCurrrentPageNumber(5);
+        pagination.setCurrrentPageNumber(1);
         pagination.setMaxPageSize(10);
         serviceControl.setPagination(pagination);
 

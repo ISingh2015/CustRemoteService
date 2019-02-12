@@ -40,7 +40,7 @@
                 <configuration>
                     <junitArtifactName>junit:junit</junitArtifactName>
                     <includes>
-                        <include>**/Co**Test.java</include>
+                        <include>**/C**Test.java</include>
 
                     </includes>
                     <excludes>
