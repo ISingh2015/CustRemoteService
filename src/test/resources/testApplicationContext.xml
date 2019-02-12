@@ -66,13 +66,15 @@
         
         <property name="hibernateProperties">
             <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+                <!--<prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>-->
+                <prop key="hibernate.dialect">${db.dialect}</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>    
                 <prop key="hibernate.cache.use_query_cache">false</prop> 
                 <prop key="hibernate.cache.use_second_level_cache">true</prop> 
                 <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
                 <prop key="hibernate.connection.release_mode">after_transaction</prop> 
+                <prop key="hibernate.hbm2ddl.auto">${db.create.schema}</prop>
                 <!--<prop key="hibernate.hbm2ddl.auto">update</prop>-->                 
                 <!--<prop key="hibernate.generate_statistics">true</prop>-->
             </props>

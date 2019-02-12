@@ -9,6 +9,8 @@ import com.cust.common.SessionInfo;
 import com.cust.common.UserInfo;
 import com.cust.domain.service.CountryService;
 import com.cust.domain.vo.ElegantCountry;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.ArrayList;
 import java.util.List;
 import junit.framework.Assert;
@@ -18,10 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:testApplicationContext.xml"})
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,DbUnitTestExecutionListener.class})
+@DatabaseSetup({"classpath:CountryTestData.xml"})
 public class CountryServiceTest {
 
     Logger logger = LoggerFactory.getLogger(CountryServiceTest.class);
@@ -32,7 +38,7 @@ public class CountryServiceTest {
     public CountryServiceTest() {
     }
 
-//    @Test
+    @Test
     public void testGetCountryId() {
         ElegantCountry elegantCountry = null;
         ServicePayload servicePayload;
@@ -74,13 +80,13 @@ public class CountryServiceTest {
         serviceControl.setSessionInfo(sessionInfo);
         
         Pagination pagination = new Pagination();
-        pagination.setCurrrentPageNumber(5);
+        pagination.setCurrrentPageNumber(1);
         pagination.setMaxPageSize(10);
         serviceControl.setPagination(pagination);
         
         ArrayList<ElegantCountry> elegantCountryList=null;
         try {
-            int userId = 64002;
+//            int userId = 64002;
             servicePayload = elegantCountryService.getAllCountries(serviceControl);
             elegantCountryList = (ArrayList<ElegantCountry>) servicePayload.getResponseValue().get(0);
             logger.info("Country List Found          : " + elegantCountryList.size());
@@ -90,7 +96,7 @@ public class CountryServiceTest {
         Assert.assertEquals(true, (elegantCountryList != null));
     }
 
-//    @Test
+    @Test
     public void testSaveCountry() {
         ServicePayload servicePayload;        
         ArrayList<ElegantCountry> elegantCountryList = null;
@@ -105,12 +111,12 @@ public class CountryServiceTest {
         serviceControl.setDbInfo(dbInfo);
         serviceControl.setSessionInfo(sessionInfo);
         Pagination pagination = new Pagination();
-        pagination.setCurrrentPageNumber(5);
+        pagination.setCurrrentPageNumber(1);
         pagination.setMaxPageSize(10);
         serviceControl.setPagination(pagination);
         
         try {
-            int userId = 64002;
+//            int userId = 64002;
             servicePayload = elegantCountryService.getAllCountries(serviceControl);
             elegantCountryList = (ArrayList<ElegantCountry>) servicePayload.getResponseValue().get(0);
             servicePayload = elegantCountryService.saveCountryList(serviceControl, elegantCountryList);

@@ -7,6 +7,8 @@ import com.cust.common.QueryCriteria;
 import com.cust.common.ServiceControl;
 import com.cust.domain.dao.CountryDao;
 import com.cust.domain.vo.ElegantCountry;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
 import java.util.ArrayList;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -15,10 +17,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:testApplicationContext.xml"})
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class,DbUnitTestExecutionListener.class})
+@DatabaseSetup({"classpath:CountryTestData.xml"})
+
 public class CountryDaoTest {
 
     Logger logger = LoggerFactory.getLogger(CountryDaoTest.class);
@@ -28,7 +35,7 @@ public class CountryDaoTest {
     public CountryDaoTest() {
     }
 
-//    @Test
+    @Test
     public void testGetCountryById() {
         ElegantCountry country = null;
         try {
@@ -51,7 +58,7 @@ public class CountryDaoTest {
         FilterCriteria filterCriteria = new FilterCriteria();
         filterCriteria.setFilterFieldName("countryName");
         filterCriteria.setFilterCondition("like");
-        filterCriteria.setFilterFieldValue("a%");
+        filterCriteria.setFilterFieldValue("%a%");
         filterCriteriaList.add(filterCriteria);
 
         queryCriteria.setFilterCriteria(filterCriteriaList);
@@ -65,14 +72,14 @@ public class CountryDaoTest {
         Assert.assertEquals(false, countryList.isEmpty());
     }
 
-//    @Test
+    @Test
     public void testSaveCountry() {
         ArrayList<ElegantCountry> countryList = new ArrayList<> ();
         try {
             ElegantCountry country = new ElegantCountry();
             country.setCountryID(500);
             country.setCountryCd("IN");
-            country.setCountryName("Test Country");
+            country.setCountryName("India Saved");
             countryList.add(country);
             countryList = elegantCountryDao.saveCountryList(countryList);
             logger.info("Country Saved : " + countryList.size());
