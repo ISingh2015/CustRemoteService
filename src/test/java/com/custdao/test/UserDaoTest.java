@@ -49,7 +49,7 @@ public class UserDaoTest {
         serviceControl.setPagination(pagination);
 
         try {
-            long compId = 6000;
+            long compId = 9999;
             userList = elegantUserDao.getAllUsers(serviceControl, compId);
             Collections.sort(userList);
             for (ElegantUser user : userList) {

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <Customer compID="6000" userID="64002" custID="001" custName="Test Customer"/>
+    <Customer compID="6000" userID="64002" custID="001" custName="Test Customer" frozen="0"/>
 </dataset>

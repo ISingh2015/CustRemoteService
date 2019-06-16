@@ -143,6 +143,7 @@
         <property value="${db.userName}" name="dbUserName"/>
         <property value="${db.password}" name="dbPassword"/>
         <property value="${db.serverName}" name="dbServerName"/>
+        <property value="${db.serverPort}" name="dbServerPort"/>        
     </bean>    
     <bean id="dynamicDataSource" class="com.cust.common.session.DynamicDataSource" autowire="byName"/>    
     <!--<bean id="customRoutingDS" class="com.cust.common.session.CustomAbstractRoutingDataSource" autowire="byName"/>-->    
