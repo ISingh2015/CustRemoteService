@@ -1,16 +1,18 @@
-# CRM Service for SWING Client using SQL Server.
+# CRM remote Service & SWING Client using SQL Server.
 
-Customer Order Management remote service, exposes CRM endpoints using SPRING-HESSIAN exporter.
-The CRM Service is Multi company having multiple Customer, Products, Sales Person management including some report Reportsm, it is built using Spring Frame 4 and uses the Spring-hibernateDAO & HESSIAN exporter. 
+Customer Order Management system, exposes CRM endpoints using SPRING MVC & SPRING-HESSIAN exporter.
+This CRM Service is Multi company and once can define multiple Customer, Products, Sales Person management for a company. There is also a  reporting service for managing and printing online transactions like orders and bills, Quaterly and yearly sales and consolidations.
 
-One needs to download and build maven Dependency as mentioned below for starting up the web service. Once  started the SWING clients can connect and consume the service endpoints for loggin in and accessing remote CRM data.
+# Technical.
+To successfully build the service for local access, one needs to download and build the required repos as mentioned below. There is a centralised parent POM which can download the shared libs. 
 
-1. CustBuild. Module to build required submodules required in the CRM system.
-2. Cust Service. Module containing the DAO and Service Layers implementation used in the web application (below 5)
-3. Cust App Client.  Module creating the Client Web service Interface and Client VO.
-4. Customer Login Manager. Module with centralised access to the remote service URL's.
-5. CustWeb - Web Module for creating user access and allwoing downloadi of the SWING client
+1. CustParent : Contains common dependencies including frameworks required for building the Service and Swing Client. [CRM Parent](https://github.com/ISingh2015/CustParent) 
+2. CustBuild. Module to build required submodules required in the CRM system. [CRM Build](https://github.com/ISingh2015/CustBuild) 
+3. Cust App Client.  Module for creating Web service Stubs.[CRM Stubs](https://github.com/ISingh2015/CustAppClient) 
+4. CustWeb - Web Module for downloading CrM Windows Setup File.[CRM Stubs](https://github.com/ISingh2015/CustWeb) 
 
+Once started the SWING clients can connect and consume the service endpoints for loggin in and accessing remote CRM data.
 Links pointing to individual repos 
-1. Java Thin client SWING: https://github.com/ISingh2015/CustLoginModule
+1. [CRM remote Service](https://github.com/ISingh2015/CustRenoteService) 
+2. [Java Thin client SWING](https://github.com/ISingh2015/CustLoginManager)
 
