@@ -1,13 +1,14 @@
-# CustServiceWeb
-Maven Customer Service order Management WEB application, exposes WEB Services over the Internet built using SPRING-HESSIAN exporter.
-Uses hibernateDAO Support for building DAO, SERVICE and HESSIAN exporter for WEB SERVICE layer. Home page displays no menu and is used only starting up the WEB Service 
+# CRM Service for SWING Client using SQL Server.
 
-One needs to download other Maven Dependency needed for functioning of the WEB app as mentioned below.
+Customer Order Management remote service, exposes CRM endpoints using SPRING-HESSIAN exporter.
+The CRM Service is Multi company having multiple Customer, Products, Sales Person management including some report Reportsm, it is built using Spring Frame 4 and uses the Spring-hibernateDAO & HESSIAN exporter. 
 
-1. Cust Service dependency
-    Actual Module containing the DAO and Service Layers for running the web service.
-2. Cust App Client 
-    Module creating the Client Web service Interface and Client VO. .
-3. Customer Login Manager.
-    Convenience Module for managing backend calls to the WEB Service layer using REMOTING HESSIAN Poxy. Module provides remote access to the database data and can be included in any web application for making calls to the Cutomer WEB Service.
+One needs to download and build maven Dependency as mentioned below for starting up the web service. Once  started the SWING clients can connect and consume the service endpoints for loggin in and accessing remote CRM data.
+
+1. CustBuild. Module to build required submodules required in the CRM system.
+2. Cust Service. Module containing the DAO and Service Layers implementation used in the web application (below 5)
+3. Cust App Client.  Module creating the Client Web service Interface and Client VO.
+4. Customer Login Manager. Module with centralised access to the remote service URL's.
+5. CustWeb - Web Module for creating user access and allwoing downloadi of the SWING client
+
     
