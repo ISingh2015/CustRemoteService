@@ -11,4 +11,6 @@ One needs to download and build maven Dependency as mentioned below for starting
 4. Customer Login Manager. Module with centralised access to the remote service URL's.
 5. CustWeb - Web Module for creating user access and allwoing downloadi of the SWING client
 
-    
+Links pointing to individual repos 
+1. Java Thin client SWING: https://github.com/ISingh2015/CustLoginModule
+
