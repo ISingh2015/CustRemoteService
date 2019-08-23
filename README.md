@@ -16,7 +16,7 @@ Run the CUSTWEB module in a tomcat container after deployment, to start the CRM 
 
 Once CRM Web is up and running, Windows demo clients can register as a user and download the CRM Swing client setup file, which is a windows executable setup. once setup of Swing Client is complete, double click the CRM Icon on the Desktop to run the application and login to the remote CRM Service using your credentials while registering. 
 
-Admin user can create additional users with different ROLES for managing data entry and reporting. The admin user registration is valid for a month for exploring the CRM features like Customer, Sales Person, Orders, Billing, recording payment transactions & reporting. For Enter prise CRM access please email IT [ElegantSystems](mailto:inderjitsanhotra@gmail.com?subject=Elegant system for Enterprise access)
+Admin user can create additional users with different ROLES for managing data entry and reporting. The admin user registration is valid for a month for exploring the CRM features like Customer, Sales Person, Orders, Billing, recording payment transactions & reporting. For Enter prise CRM access please email IT [ElegantSystems](mailto:inderjitsanhotra@gmail.com?subject=Elegant%20system%20for%20Enterprise%20 access)
 
 Links pointing to individual repos 
 1. [CRM remote Service](https://github.com/ISingh2015/CustRenoteService) 
