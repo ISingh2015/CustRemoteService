@@ -14,7 +14,9 @@ One needs to clone the required CRM repos as mentioned below to successfully bui
 Customise the database connection properties in 4 above (Property file under resource folder), then build the CUSTWEB module to create the WAR File.
 Run the CUSTWEB module in a tomcat container after deployment, to start the CRM Service.
 
-Once CRM Web is up and running, Windows clients can register as a user and download the CRM Swing client setup file, which is a windows executable setup. once setup of Swing Client is complete, double click the CRM Icon on the Desktop to run the application and login to the remote CRM Service. The Swing Client creates a admin user who has a months access for exploring the CRM features like Customer, Sales Person, Orders, Billing, recording payment transactions & reporting.
+Once CRM Web is up and running, Windows demo clients can register as a user and download the CRM Swing client setup file, which is a windows executable setup. once setup of Swing Client is complete, double click the CRM Icon on the Desktop to run the application and login to the remote CRM Service using your credentials while registering. 
+
+Admin user can create additional users with different ROLES for managing data entry and reporting. The admin user registration is valid for a month for exploring the CRM features like Customer, Sales Person, Orders, Billing, recording payment transactions & reporting. For Enter prise CRM access please email IT [ElegantSystems](mailto:inderjitsanhotra@gmail.com?subject=Elegant system for Enterprise access)
 
 Links pointing to individual repos 
 1. [CRM remote Service](https://github.com/ISingh2015/CustRenoteService) 
