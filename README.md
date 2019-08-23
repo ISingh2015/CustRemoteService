@@ -3,7 +3,7 @@
 Customer Order Management system, exposes CRM endpoints using SPRING MVC & SPRING-HESSIAN exporter.
 This CRM Service is Multi company and once can define multiple Customer, Products, Sales Person management for a company. There is also a  reporting service for managing and printing online transactions like orders and bills, Quaterly and yearly sales and consolidations.
 
-# how to build on Windows instruction.
+# Instruction on how to build Locally on Windows.
 One needs to clone the required CRM repos as mentioned below to successfully build and run the CRM service on a local windows o/s.
 
 1. CustParent : Contains common dependencies including frameworks required for building the Service and Swing Client. [CRM Parent](https://github.com/ISingh2015/CustParent) 
